@@ -35,11 +35,24 @@ class BottomNavigation extends StatelessWidget {
                 Positioned(
                   top: 0,
                   right: 0,
-                  child: Icon(
-                    Icons.brightness_1,
-                    size: 8,
-                    color: Colors.redAccent,
+                  child: Container(
+                    child: Text(
+                      '1',
+                      style: TextStyle(color: Colors.white, fontSize: 6),
+                    ),
+                    alignment: Alignment.center,
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: Colors.redAccent,
+                      shape: BoxShape.circle,
+                    ),
                   ),
+                  // child: Icon(
+                  //   Icons.brightness_1,
+                  //   size: 8,
+                  //   color: Colors.redAccent,
+                  // ),
                 )
               ],
             )),
