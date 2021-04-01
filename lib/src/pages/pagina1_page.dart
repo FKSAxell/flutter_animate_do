@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate_do/src/pages/twitter_page.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Pagina1Page extends StatelessWidget {
@@ -15,7 +16,14 @@ class Pagina1Page extends StatelessWidget {
         actions: [
           IconButton(
             icon: FaIcon(FontAwesomeIcons.twitter),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TwitterPage(),
+                ),
+              );
+            },
           ),
           SlideInLeft(
             from: 100,
