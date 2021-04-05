@@ -1,17 +1,22 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class NavegacionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.pink,
-        title: Text("Pagina de notificaciones"),
+    return ChangeNotifierProvider(
+      create: (_) => _NotificationModel(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.pink,
+          title: Text("Pagina de notificaciones"),
+        ),
+        // body: ,
+        floatingActionButton: BotonFlotante(),
+        bottomNavigationBar: BottomNavigation(),
       ),
-      // body: ,
-      floatingActionButton: BotonFlotante(),
-      bottomNavigationBar: BottomNavigation(),
     );
   }
 }
@@ -19,13 +24,14 @@ class NavegacionPage extends StatelessWidget {
 class BottomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final int numero = Provider.of<_NotificationModel>(context).numero;
     return BottomNavigationBar(
       currentIndex: 0,
       selectedItemColor: Colors.pink,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          label: "Home",
-          icon: FaIcon(FontAwesomeIcons.home),
+          label: "Bones",
+          icon: FaIcon(FontAwesomeIcons.bone),
         ),
         BottomNavigationBarItem(
             label: "Notificaciones",
@@ -35,17 +41,28 @@ class BottomNavigation extends StatelessWidget {
                 Positioned(
                   top: 0,
                   right: 0,
-                  child: Container(
-                    child: Text(
-                      '1',
-                      style: TextStyle(color: Colors.white, fontSize: 6),
-                    ),
-                    alignment: Alignment.center,
-                    width: 12,
-                    height: 12,
-                    decoration: BoxDecoration(
-                      color: Colors.redAccent,
-                      shape: BoxShape.circle,
+                  child: BounceInDown(
+                    from: 10,
+                    animate: (numero > 0) ? true : false, //lo oculta
+
+                    child: Bounce(
+                      from: 10,
+                      controller: (controller) =>
+                          Provider.of<_NotificationModel>(context)
+                              .bounceController = controller,
+                      child: Container(
+                        child: Text(
+                          '$numero',
+                          style: TextStyle(color: Colors.white, fontSize: 6),
+                        ),
+                        alignment: Alignment.center,
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
                     ),
                   ),
                   // child: Icon(
@@ -68,10 +85,35 @@ class BottomNavigation extends StatelessWidget {
 class BotonFlotante extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final notiModel = Provider.of<_NotificationModel>(context, listen: false);
     return FloatingActionButton(
       backgroundColor: Colors.pink,
       child: FaIcon(FontAwesomeIcons.play),
-      onPressed: () {},
+      onPressed: () {
+        int numero = notiModel.numero;
+        numero++;
+        notiModel.numero = numero;
+        if (numero >= 2) {
+          final controller = notiModel.bounceController;
+          controller.forward(from: 0.0);
+        }
+      },
     );
+  }
+}
+
+class _NotificationModel extends ChangeNotifier {
+  int _numero = 0;
+  AnimationController _bounceController;
+  int get numero => this._numero;
+  set numero(int numero) {
+    this._numero = numero;
+    notifyListeners();
+  }
+
+  AnimationController get bounceController => this._bounceController;
+  set bounceController(AnimationController bounceController) {
+    this._bounceController = bounceController;
+    // notifyListeners();
   }
 }
